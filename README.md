@@ -1,99 +1,79 @@
-# HoPhuc Blog
+# Phuc's Blog
 
-A personal blog built with [Next.js](https://nextjs.org/), [Tailwind CSS](https://tailwindcss.com/), and [Contentlayer](https://www.contentlayer.dev/) for content management.
+Personal blog sharing my journey as an Agricultural Engineering graduate turned full-stack developer with 3+ years of experience. Built with modern web technologies for optimal performance and user experience.
 
-This blog is based on the Tailwind Nextjs Starter Blog template with personal customizations.
+## Tech Stack
+
+- **Framework**: [Next.js 15](https://nextjs.org/) with TypeScript
+- **Styling**: [Tailwind CSS 4.0](https://tailwindcss.com/)
+- **Content**: [Contentlayer](https://www.contentlayer.dev/) for MDX processing
+- **Deployment**: Optimized for Vercel and static hosting
 
 ## Quick Start
 
-1. **Install dependencies**
-
 ```bash
+# Install dependencies
 yarn install
-```
 
-2. **Start development server**
-
-```bash
+# Start development server
 yarn dev
+
+# Build for production
+yarn build
 ```
 
-3. **Open your browser**
-   Navigate to [http://localhost:3000](http://localhost:3000) to see your blog.
+Open [http://localhost:3000](http://localhost:3000) to view the blog locally.
 
-## Key Configuration Files
+## Project Structure
 
-### Site Information
+```
+├── app/                    # Next.js app router pages
+├── components/             # Reusable React components
+├── data/                   # Content and configuration
+│   ├── blog/              # Blog posts (.mdx files)
+│   ├── authors/           # Author profiles
+│   └── siteMetadata.js    # Site configuration
+├── layouts/               # Page layout templates
+├── lib/                   # Utility functions
+└── public/                # Static assets
+```
 
-- `data/siteMetadata.js` - Update with your personal information, site title, description, etc.
-- `data/authors/default.mdx` - Your author profile and bio
+## Configuration
 
-### Content
+### Essential Files
 
-- `data/blog/` - Add your blog posts here (`.mdx` or `.md` files)
-- `data/projectsData.ts` - Update with your projects
-- `data/headerNavLinks.ts` - Customize navigation menu
+- `data/siteMetadata.js` - Site information, social links, analytics
+- `data/authors/default.mdx` - Author profile and bio
+- `data/headerNavLinks.ts` - Navigation menu items
+- `contentlayer.config.ts` - Content processing configuration
 
 ### Styling
 
 - `tailwind.config.js` - Tailwind CSS configuration
-- `css/tailwind.css` - Global styles
-- `css/prism.css` - Code syntax highlighting styles
-
-### Assets
-
-- `data/logo.png` - Replace with your logo
-- `public/static/` - Store images, favicons, and other static assets
+- `css/tailwind.css` - Global styles and custom classes
+- `css/prism.css` - Code block syntax highlighting
 
 ## Writing Blog Posts
 
-### Creating a New Post
-
-1. Create a new `.mdx` file in `data/blog/`
-2. Add frontmatter at the top:
+Create new posts in `data/blog/` with the following frontmatter:
 
 ```yaml
 ---
 title: 'Your Post Title'
 date: '2024-01-01'
-tags: ['tag1', 'tag2']
+tags: ['development', 'personal']
 draft: false
 summary: 'Brief description of your post'
 authors: ['default']
+layout: 'PostLayout'
 ---
 ```
 
-### Frontmatter Fields
+### Available Layouts
 
-- `title` (required) - Post title
-- `date` (required) - Publication date
-- `tags` (optional) - Array of tags
-- `draft` (optional) - Set to `true` to hide from production
-- `summary` (optional) - Post excerpt
-- `images` (optional) - Array of image paths for social sharing
-- `authors` (optional) - Array of author names (corresponds to files in `data/authors`)
-
-### Layouts
-
-Choose from 3 available layouts:
-
-- `PostLayout` (default) - Two-column layout with sidebar
-- `PostSimple` - Clean, minimal layout
-- `PostBanner` - Layout with banner image
-
-## Project Structure
-
-```
-├── app/                 # Next.js app directory
-├── components/          # React components
-├── data/               # Content and configuration
-│   ├── blog/           # Blog posts (.mdx files)
-│   ├── authors/        # Author profiles
-│   └── siteMetadata.js # Site configuration
-├── layouts/            # Page layouts
-├── public/             # Static assets
-└── styles/             # CSS and styling
-```
+- `PostLayout` - Default two-column layout with sidebar
+- `PostSimple` - Clean, minimal single-column layout
+- `PostBanner` - Layout with featured banner image
 
 ## Deployment
 
@@ -105,9 +85,41 @@ Choose from 3 available layouts:
 
 ### Static Hosting (GitHub Pages, Netlify, etc.)
 
+## Features
+
+- **Performance**: Lightweight with 85kB first load JS
+- **SEO Optimized**: RSS feeds, sitemaps, and meta tags
+- **Responsive Design**: Mobile-friendly with dark/light themes
+- **Content Management**: MDX support with syntax highlighting
+- **Interactive Elements**: Comments (Giscus), search (Kbar), analytics
+- **Multiple Layouts**: Flexible post and listing layouts
+- **Tag System**: Automatic tag pages and filtering
+
+## Deployment
+
+### Vercel (Recommended)
+
 ```bash
-EXPORT=1 UNOPTIMIZED=1 yarn build
+# Automatic deployment on git push
+# Connect your GitHub repository to Vercel
 ```
+
+### Static Hosting
+
+```bash
+# Build static export
+EXPORT=1 UNOPTIMIZED=1 yarn build
+
+# Deploy the generated 'out' folder
+```
+
+## Development
+
+Built on the excellent [Tailwind Nextjs Starter Blog](https://github.com/timlrx/tailwind-nextjs-starter-blog) template with personal customizations for my journey and experiences.
+
+## License
+
+MIT © [Original Template](https://github.com/timlrx/tailwind-nextjs-starter-blog)
 
 Then deploy the generated `out` folder.
 

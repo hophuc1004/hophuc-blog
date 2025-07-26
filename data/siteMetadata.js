@@ -6,10 +6,10 @@ const siteMetadata = {
   description: `Welcome to my personal blog — where I share my journey, this space reflects my growth as a Agricultural Engineering, my experiences in startup, delivery gigs, recruitment, self-taught developer, and now full-stack developer with more than 3 years experiences. I'm writing to learn, to connect, and to grow — one post at a time.`,
   language: 'en-us',
   theme: 'system', // system, dark or light
-  siteUrl: 'https://tailwind-nextjs-starter-blog.vercel.app',
-  siteRepo: 'https://github.com/timlrx/tailwind-nextjs-starter-blog',
+  // siteUrl: 'https://tailwind-nextjs-starter-blog.vercel.app',
+  // siteRepo: 'https://github.com/timlrx/tailwind-nextjs-starter-blog',
   siteLogo: `${process.env.BASE_PATH || ''}/static/images/logo.png`,
-  socialBanner: `${process.env.BASE_PATH || ''}/static/images/twitter-card.png`,
+  socialBanner: `${process.env.BASE_PATH || ''}/static/images/background-image.png`,
   // mastodon: 'https://mastodon.social/@mastodonuser',
   email: 'hophuc1004@gmail.com',
   github: 'https://github.com/hophuc1004',
