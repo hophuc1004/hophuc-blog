@@ -1,6 +1,6 @@
 import siteMetadata from '@/data/siteMetadata'
 import headerNavLinks from '@/data/headerNavLinks'
-import Logo from '@/data/logo.png'
+import { getStaticImagePath } from '@/lib/utils'
 import Image from 'next/image'
 import Link from './Link'
 import MobileNav from './MobileNav'
@@ -19,7 +19,7 @@ const Header = () => {
         <div className="flex items-center justify-between">
           {/* <Logo /> */}
           <Image
-            src={Logo}
+            src={getStaticImagePath('logo.png')}
             alt="Logo"
             width={108}
             height={88}

@@ -56,7 +56,6 @@ const securityHeaders = [
 
 const output = process.env.EXPORT ? 'export' : undefined
 const basePath = process.env.BASE_PATH || undefined
-const unoptimized = process.env.UNOPTIMIZED ? true : undefined
 const distDir = process.env.EXPORT ? 'out' : '.next'
 
 /**
@@ -69,7 +68,7 @@ module.exports = () => {
     distDir,
     basePath,
     reactStrictMode: true,
-    trailingSlash: false,
+    trailingSlash: true, // Better for static hosting
     pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
     eslint: {
       dirs: ['app', 'components', 'layouts', 'scripts'],
@@ -81,7 +80,7 @@ module.exports = () => {
           hostname: 'picsum.photos',
         },
       ],
-      unoptimized,
+      unoptimized: true, // Always use unoptimized for static exports
     },
     // async headers() {
     //   return [
