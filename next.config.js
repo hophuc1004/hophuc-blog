@@ -57,6 +57,7 @@ const securityHeaders = [
 const output = process.env.EXPORT ? 'export' : undefined
 const basePath = process.env.BASE_PATH || undefined
 const unoptimized = process.env.UNOPTIMIZED ? true : undefined
+const distDir = process.env.EXPORT ? 'out' : '.next'
 
 /**
  * @type {import('next/dist/next-server/server/config').NextConfig}
@@ -65,6 +66,7 @@ module.exports = () => {
   const plugins = [withContentlayer, withBundleAnalyzer]
   return plugins.reduce((acc, next) => next(acc), {
     output,
+    distDir,
     basePath,
     reactStrictMode: true,
     trailingSlash: false,
