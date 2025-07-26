@@ -50,6 +50,5 @@ yarn-error.log*
 .devcontainer
 .husky
 .vscode
-.yarn
 .github
 app/api
