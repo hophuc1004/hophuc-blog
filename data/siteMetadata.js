@@ -6,8 +6,8 @@ const siteMetadata = {
   description: `Welcome to my personal blog — where I share my journey, this space reflects my growth as a Agricultural Engineering, my experiences in startup, delivery gigs, recruitment, self-taught developer, and now full-stack developer with more than 3 years experiences. I'm writing to learn, to connect, and to grow — one post at a time.`,
   language: 'en-us',
   theme: 'system', // system, dark or light
-  // siteUrl: 'https://tailwind-nextjs-starter-blog.vercel.app',
-  // siteRepo: 'https://github.com/timlrx/tailwind-nextjs-starter-blog',
+  siteUrl: 'https://blog.phuchanhtrinh.work', // Update this with your actual domain
+  siteRepo: 'https://github.com/hophuc1004/hophuc-blog',
   siteLogo: `${process.env.BASE_PATH || ''}/static/images/logo.png`,
   socialBanner: `${process.env.BASE_PATH || ''}/static/images/background-image.png`,
   // mastodon: 'https://mastodon.social/@mastodonuser',
