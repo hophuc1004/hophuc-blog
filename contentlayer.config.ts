@@ -99,7 +99,7 @@ export const Blog = defineDocumentType(() => ({
   contentType: 'mdx',
   fields: {
     title: { type: 'string', required: true },
-    date: { type: 'date', required: true },
+    date: { type: 'date', required: false },
     tags: { type: 'list', of: { type: 'string' }, default: [] },
     lastmod: { type: 'date' },
     draft: { type: 'boolean' },
@@ -119,12 +119,16 @@ export const Blog = defineDocumentType(() => ({
         '@context': 'https://schema.org',
         '@type': 'BlogPosting',
         headline: doc.title,
-        datePublished: doc.date,
-        dateModified: doc.lastmod || doc.date,
+        datePublished: doc.date || '2024-01-01',
+        dateModified: doc.lastmod || doc.date || '2024-01-01',
         description: doc.summary,
         image: doc.images ? doc.images[0] : siteMetadata.socialBanner,
         url: `${siteMetadata.siteUrl}/${doc._raw.flattenedPath}`,
       }),
+    },
+    date: {
+      type: 'date',
+      resolve: (doc) => doc.date || '2024-01-01',
     },
   },
 }))
