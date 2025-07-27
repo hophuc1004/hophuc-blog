@@ -90,7 +90,7 @@ Based on existing tags in your blog:
 
 ### Technology Tags
 
-- `next-js`, `tailwind`, `markdown`, `github`
+- `next-js`, `tailwind`, `markdown`, `github`, `ai-tools`
 
 ### Language/Tool Tags
 
@@ -100,6 +100,10 @@ Based on existing tags in your blog:
 
 - `viết-lách` (Vietnamese writing)
 - `blog-cá-nhân` (Personal blog)
+
+### Personal Development Tags
+
+- `self-taught`, `career-change`, `learning-journey`, `life-lessons`, `tech-career`, `english-learning`, `personal-growth`, `startup`
 
 ### Topic Tags
 

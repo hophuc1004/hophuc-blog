@@ -109,6 +109,7 @@ export const Blog = defineDocumentType(() => ({
     layout: { type: 'string' },
     bibliography: { type: 'string' },
     canonicalUrl: { type: 'string' },
+    postType: { type: 'number', default: 0 }, // 0 = English, 1 = Vietnamese
   },
   computedFields: {
     ...computedFields,

@@ -1,11 +1,12 @@
 {
-  "daily-life": 1,
-  "self-taught": 1,
+  "life-lessons": 7,
+  "personal-growth": 7,
+  "self-taught": 2,
+  "learning-journey": 2,
+  "reflection": 1,
+  "startup": 1,
   "career-change": 1,
-  "learning-journey": 1,
-  "life-lessons": 1,
-  "tech-career": 1,
   "english-learning": 1,
-  "personal-growth": 1,
-  "ai-tools": 1
+  "learn-journey": 1,
+  "daily-life": 1
 }

@@ -5,6 +5,7 @@ import { slug } from 'github-slugger'
 import { formatDate } from 'pliny/utils/formatDate'
 import { CoreContent } from 'pliny/utils/contentlayer'
 import type { Blog } from 'contentlayer/generated'
+import { allBlogs } from 'contentlayer/generated'
 import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
@@ -74,23 +75,27 @@ export default function ListLayoutWithTags({
 }: ListLayoutProps) {
   const pathname = usePathname()
   const tagCounts = tagData as Record<string, number>
-  const tagKeys = Object.keys(tagCounts)
 
-  // Function to check if a tag is Vietnamese (contains Vietnamese characters or specific Vietnamese words)
-  const isVietnameseTag = (tag: string): boolean => {
-    const vietnamesePattern =
-      /[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]/i
-    const vietnameseWords = ['blog-cá-nhân', 'viết-lách', 'tiếng-việt', 'việt-nam']
-    return vietnamesePattern.test(tag) || vietnameseWords.some((word) => tag.includes(word))
-  }
+  // Use ALL blogs to determine language-specific tags, not just filtered posts
+  const allEnglishPosts = allBlogs.filter((post) => post.postType === 0)
+  const allVietnamesePosts = allBlogs.filter((post) => post.postType === 1)
 
-  // Separate tags into English and Vietnamese
-  const englishTags = tagKeys
-    .filter((tag) => !isVietnameseTag(tag))
-    .sort((a, b) => tagCounts[b] - tagCounts[a])
-  const vietnameseTags = tagKeys
-    .filter((tag) => isVietnameseTag(tag))
-    .sort((a, b) => tagCounts[b] - tagCounts[a])
+  // Get unique tags for each language from ALL posts
+  const englishTags = [...new Set(allEnglishPosts.flatMap((post) => post.tags || []))].sort(
+    (a, b) => {
+      const slugA = slug(a)
+      const slugB = slug(b)
+      return (tagCounts[slugB] || 0) - (tagCounts[slugA] || 0)
+    }
+  )
+
+  const vietnameseTags = [...new Set(allVietnamesePosts.flatMap((post) => post.tags || []))].sort(
+    (a, b) => {
+      const slugA = slug(a)
+      const slugB = slug(b)
+      return (tagCounts[slugB] || 0) - (tagCounts[slugA] || 0)
+    }
+  )
 
   const displayPosts = initialDisplayPosts.length > 0 ? initialDisplayPosts : posts
 
@@ -128,7 +133,7 @@ export default function ListLayoutWithTags({
                         <li key={t} className="my-3">
                           {decodeURI(pathname.split('/tags/')[1]) === slug(t) ? (
                             <h3 className="text-primary-500 inline px-3 py-2 text-sm font-bold uppercase">
-                              {`${t} (${tagCounts[t]})`}
+                              {`${t} (${tagCounts[slug(t)] || 0})`}
                             </h3>
                           ) : (
                             <Link
@@ -136,7 +141,7 @@ export default function ListLayoutWithTags({
                               className="hover:text-primary-500 dark:hover:text-primary-500 px-3 py-2 text-sm font-medium text-gray-500 uppercase dark:text-gray-300"
                               aria-label={`View posts tagged ${t}`}
                             >
-                              {`${t} (${tagCounts[t]})`}
+                              {`${t} (${tagCounts[slug(t)] || 0})`}
                             </Link>
                           )}
                         </li>
@@ -158,7 +163,7 @@ export default function ListLayoutWithTags({
                         <li key={t} className="my-3">
                           {decodeURI(pathname.split('/tags/')[1]) === slug(t) ? (
                             <h3 className="text-primary-500 inline px-3 py-2 text-sm font-bold uppercase">
-                              {`${t} (${tagCounts[t]})`}
+                              {`${t} (${tagCounts[slug(t)] || 0})`}
                             </h3>
                           ) : (
                             <Link
@@ -166,7 +171,7 @@ export default function ListLayoutWithTags({
                               className="hover:text-primary-500 dark:hover:text-primary-500 px-3 py-2 text-sm font-medium text-gray-500 uppercase dark:text-gray-300"
                               aria-label={`View posts tagged ${t}`}
                             >
-                              {`${t} (${tagCounts[t]})`}
+                              {`${t} (${tagCounts[slug(t)] || 0})`}
                             </Link>
                           )}
                         </li>
