@@ -1,14 +1,19 @@
 {
+  "phat-trien-ban-than": 6,
+  "bai-hoc-cuoc-song": 7,
   "blogging": 1,
-  "self-taught": 1,
-  "learning-journey": 1,
+  "self-taught": 2,
+  "learning-journey": 2,
   "reflection": 2,
   "career-change": 1,
   "tu-hoc": 1,
-  "hanh-trinh-hoc": 1,
-  "life-lessons": 1,
+  "hanh-trinh-hoc": 3,
+  "khoi-nghiep": 2,
+  "thay-doi-nghe-nghiep": 1,
+  "life-lessons": 2,
   "inspiration": 1,
   "growth": 1,
-  "bai-hoc-cuoc-song": 1,
-  "cam-hung": 1
+  "cam-hung": 1,
+  "english-learning": 1,
+  "self-development": 1
 }
