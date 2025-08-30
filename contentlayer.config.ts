@@ -61,23 +61,59 @@ const computedFields: ComputedFields = {
 
 /**
  * Count the occurrences of all tags across blog posts and write to json file
+ * Separate English and Vietnamese tags based on postType
  */
 async function createTagCount(allBlogs) {
-  const tagCount: Record<string, number> = {}
+  const englishTagCount: Record<string, number> = {}
+  const vietnameseTagCount: Record<string, number> = {}
+  const allTagCount: Record<string, number> = {}
+
   allBlogs.forEach((file) => {
     if (file.tags && (!isProduction || file.draft !== true)) {
       file.tags.forEach((tag) => {
         const formattedTag = slug(tag)
-        if (formattedTag in tagCount) {
-          tagCount[formattedTag] += 1
+
+        // Count in all tags
+        if (formattedTag in allTagCount) {
+          allTagCount[formattedTag] += 1
         } else {
-          tagCount[formattedTag] = 1
+          allTagCount[formattedTag] = 1
+        }
+
+        // Count separately by language based on postType
+        if (file.postType === 1) {
+          // English
+          if (formattedTag in englishTagCount) {
+            englishTagCount[formattedTag] += 1
+          } else {
+            englishTagCount[formattedTag] = 1
+          }
+        } else if (file.postType === 0) {
+          // Vietnamese
+          if (formattedTag in vietnameseTagCount) {
+            vietnameseTagCount[formattedTag] += 1
+          } else {
+            vietnameseTagCount[formattedTag] = 1
+          }
         }
       })
     }
   })
-  const formatted = await prettier.format(JSON.stringify(tagCount, null, 2), { parser: 'json' })
-  writeFileSync('./app/tag-data.json', formatted)
+
+  // Write separate files for each language
+  const allFormatted = await prettier.format(JSON.stringify(allTagCount, null, 2), {
+    parser: 'json',
+  })
+  const englishFormatted = await prettier.format(JSON.stringify(englishTagCount, null, 2), {
+    parser: 'json',
+  })
+  const vietnameseFormatted = await prettier.format(JSON.stringify(vietnameseTagCount, null, 2), {
+    parser: 'json',
+  })
+
+  writeFileSync('./app/tag-data.json', allFormatted)
+  writeFileSync('./app/tag-data-english.json', englishFormatted)
+  writeFileSync('./app/tag-data-vietnamese.json', vietnameseFormatted)
 }
 
 function createSearchIndex(allBlogs) {

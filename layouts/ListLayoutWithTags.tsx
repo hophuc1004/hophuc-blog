@@ -9,7 +9,8 @@ import { allBlogs } from 'contentlayer/generated'
 import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
-import tagData from 'app/tag-data.json'
+import tagData from 'app/tag-data-english.json'
+import vietnameseTagData from 'app/tag-data-vietnamese.json'
 
 interface PaginationProps {
   totalPages: number
@@ -74,26 +75,29 @@ export default function ListLayoutWithTags({
   pagination,
 }: ListLayoutProps) {
   const pathname = usePathname()
-  const tagCounts = tagData as Record<string, number>
 
-  // Use ALL blogs to determine language-specific tags, not just filtered posts
+  // Get tag counts for both languages
+  const englishTagCounts = tagData as Record<string, number>
+  const vietnameseTagCounts = vietnameseTagData as Record<string, number>
+
+  // Filter posts by language
   const allVietnamesePosts = allBlogs.filter((post) => post.postType === 0)
   const allEnglishPosts = allBlogs.filter((post) => post.postType === 1)
 
-  // Get unique tags for each language from ALL posts
-  const vietnameseTags = [...new Set(allVietnamesePosts.flatMap((post) => post.tags || []))].sort(
-    (a, b) => {
-      const slugA = slug(a)
-      const slugB = slug(b)
-      return (tagCounts[slugB] || 0) - (tagCounts[slugA] || 0)
-    }
-  )
-
+  // Get unique tags for each language
   const englishTags = [...new Set(allEnglishPosts.flatMap((post) => post.tags || []))].sort(
     (a, b) => {
       const slugA = slug(a)
       const slugB = slug(b)
-      return (tagCounts[slugB] || 0) - (tagCounts[slugA] || 0)
+      return (englishTagCounts[slugB] || 0) - (englishTagCounts[slugA] || 0)
+    }
+  )
+
+  const vietnameseTags = [...new Set(allVietnamesePosts.flatMap((post) => post.tags || []))].sort(
+    (a, b) => {
+      const slugA = slug(a)
+      const slugB = slug(b)
+      return (vietnameseTagCounts[slugB] || 0) - (vietnameseTagCounts[slugA] || 0)
     }
   )
 
@@ -125,38 +129,6 @@ export default function ListLayoutWithTags({
                 </Link>
               )}
 
-              {/* Vietnamese Tags Section */}
-              {vietnameseTags.length > 0 && (
-                <div className="mt-4">
-                  <h4 className="text-primary-600 dark:text-primary-400 mb-2 text-sm font-semibold uppercase">
-                    Vietnamese
-                  </h4>
-                  <ul>
-                    {vietnameseTags.map((t) => {
-                      return (
-                        <li key={t} className="my-3">
-                          {pathname.includes(`/tags/${slug(t)}`) ? (
-                            <div className="bg-primary-100 dark:bg-primary-800 border-primary-500 rounded-md border-l-4 px-3 py-2">
-                              <h3 className="text-primary-700 dark:text-primary-200 text-sm font-bold uppercase">
-                                {`${t} (${tagCounts[slug(t)] || 0})`}
-                              </h3>
-                            </div>
-                          ) : (
-                            <Link
-                              href={`/tags/${slug(t)}`}
-                              className="hover:text-primary-500 dark:hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20 block rounded-md px-3 py-2 text-sm font-medium text-gray-500 uppercase transition-colors duration-200 dark:text-gray-300"
-                              aria-label={`View posts tagged ${t}`}
-                            >
-                              {`${t} (${tagCounts[slug(t)] || 0})`}
-                            </Link>
-                          )}
-                        </li>
-                      )
-                    })}
-                  </ul>
-                </div>
-              )}
-
               {/* English Tags Section */}
               {englishTags.length > 0 && (
                 <div className="mt-4">
@@ -170,7 +142,7 @@ export default function ListLayoutWithTags({
                           {pathname.includes(`/tags/${slug(t)}`) ? (
                             <div className="bg-primary-100 dark:bg-primary-800 border-primary-500 rounded-md border-l-4 px-3 py-2">
                               <h3 className="text-primary-700 dark:text-primary-200 text-sm font-bold uppercase">
-                                {`${t} (${tagCounts[slug(t)] || 0})`}
+                                {`${t} (${englishTagCounts[slug(t)] || 0})`}
                               </h3>
                             </div>
                           ) : (
@@ -179,7 +151,39 @@ export default function ListLayoutWithTags({
                               className="hover:text-primary-500 dark:hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20 block rounded-md px-3 py-2 text-sm font-medium text-gray-500 uppercase transition-colors duration-200 dark:text-gray-300"
                               aria-label={`View posts tagged ${t}`}
                             >
-                              {`${t} (${tagCounts[slug(t)] || 0})`}
+                              {`${t} (${englishTagCounts[slug(t)] || 0})`}
+                            </Link>
+                          )}
+                        </li>
+                      )
+                    })}
+                  </ul>
+                </div>
+              )}
+
+              {/* Vietnamese Tags Section */}
+              {vietnameseTags.length > 0 && (
+                <div className="mt-4">
+                  <h4 className="text-primary-600 dark:text-primary-400 mb-2 text-sm font-semibold uppercase">
+                    Tiếng Việt
+                  </h4>
+                  <ul>
+                    {vietnameseTags.map((t) => {
+                      return (
+                        <li key={t} className="my-3">
+                          {pathname.includes(`/tags/${slug(t)}`) ? (
+                            <div className="bg-primary-100 dark:bg-primary-800 border-primary-500 rounded-md border-l-4 px-3 py-2">
+                              <h3 className="text-primary-700 dark:text-primary-200 text-sm font-bold uppercase">
+                                {`${t} (${vietnameseTagCounts[slug(t)] || 0})`}
+                              </h3>
+                            </div>
+                          ) : (
+                            <Link
+                              href={`/tags/${slug(t)}`}
+                              className="hover:text-primary-500 dark:hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20 block rounded-md px-3 py-2 text-sm font-medium text-gray-500 uppercase transition-colors duration-200 dark:text-gray-300"
+                              aria-label={`View posts tagged ${t}`}
+                            >
+                              {`${t} (${vietnameseTagCounts[slug(t)] || 0})`}
                             </Link>
                           )}
                         </li>

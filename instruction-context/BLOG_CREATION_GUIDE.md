@@ -24,11 +24,12 @@ data/
 ```mdx
 ---
 title: 'Your Blog Post Title'
-date: '2025-01-26'
+date: '2025-08-30'
 tags: ['tag1', 'tag2', 'tag3']
 draft: false
 summary: 'A brief summary of your blog post content (recommended 150-200 characters)'
 images: []
+postType: 0
 ---
 
 Your blog content starts here...
@@ -58,12 +59,36 @@ Wrap up your thoughts.
 
 ### Optional Fields
 
+- **postType**: Number - Language identifier (`0` = Vietnamese, `1` = English)
 - **lastmod**: String (YYYY-MM-DD format) - Last modification date
 - **images**: Array - Featured images (first image used as social banner)
 - **authors**: Array of strings - Author references (defaults to 'default')
 - **layout**: String - Layout component name (see Layout Options)
 - **bibliography**: String - Bibliography file reference for citations
 - **canonicalUrl**: String - Canonical URL if content exists elsewhere
+
+## 🌐 Language System & Tags
+
+### Post Language Types
+
+Your blog supports bilingual content with automatic tag separation:
+
+- **Vietnamese Posts**: `postType: 0`
+  - Use Vietnamese tags: `['cau-chuyen', 'bai-hoc-cuoc-song']`
+  - Content written in Vietnamese
+- **English Posts**: `postType: 1`
+  - Use English tags: `['story', 'life-lessons']`
+  - Content written in English
+
+### Tag System Architecture
+
+Tags are automatically separated by language:
+
+- Vietnamese tags → `app/tag-data-vietnamese.json`
+- English tags → `app/tag-data-english.json`
+- Combined tags → `app/tag-data.json`
+
+**Important**: After creating new posts, run `yarn build` to regenerate tag files.
 
 ## 🎨 Layout Options
 
@@ -82,32 +107,39 @@ images: ['/static/images/your-banner.jpg']
 
 ## 🏷️ Tagging Strategy
 
-Based on existing tags in your blog:
+### Current Tag Categories
 
-### Content Type Tags
+#### Vietnamese Tags (`postType: 0`)
 
-- `blogging`, `daily-life`, `reflection`, `writings`
+- `'cau-chuyen'` - Personal stories
+- `'bai-hoc-cuoc-song'` - Life lessons
+- `'cam-hung'` - Inspiration
+- `'phat-trien-ban-than'` - Personal development
+- `'tu-hoc'` - Self-learning
+- `'hanh-trinh-hoc'` - Learning journey
 
-### Technology Tags
+#### English Tags (`postType: 1`)
 
-- `next-js`, `tailwind`, `markdown`, `github`, `ai-tools`
+- `'story'` - Personal stories
+- `'life-lessons'` - Life lessons
+- `'career-change'` - Career transitions
+- `'learning-journey'` - Learning experiences
+- `'personal-growth'` - Personal development
+- `'tech-career'` - Technology career topics
 
-### Language/Tool Tags
+### Content Type Tags (Both Languages)
 
-- `marktext`, `code`, `math`, `features`
+- `'blogging'`, `'daily-life'`, `'reflection'`, `'writings'`
 
-### Language Tags
+### Technology Tags (Both Languages)
 
-- `viết-lách` (Vietnamese writing)
-- `blog-cá-nhân` (Personal blog)
+- `'next-js'`, `'tailwind'`, `'markdown'`, `'github'`, `'ai-tools'`
 
-### Personal Development Tags
+### Best Practices
 
-- `self-taught`, `career-change`, `learning-journey`, `life-lessons`, `tech-career`, `english-learning`, `personal-growth`, `startup`
-
-### Topic Tags
-
-- `guide`, `holiday`, `canada`, `images`, `ols`
+- **Match language**: Use Vietnamese tags for Vietnamese posts, English tags for English posts
+- **Be consistent**: Stick to established tag patterns
+- **After changes**: Always run `yarn build` to update tag system
 
 ## 📸 Images and Media
 
@@ -300,6 +332,9 @@ Before publishing your blog post:
 - [ ] File is saved as `.mdx` extension
 - [ ] File location is correct (`data/blog/` or subdirectory)
 - [ ] No syntax errors in frontmatter
+- [ ] **postType matches content language** (`0` = Vietnamese, `1` = English)
+- [ ] **Tags match post language** (Vietnamese tags for Vietnamese posts, English for English)
+- [ ] Run `yarn build` after creating new posts to update tag system
 
 ### SEO & Social
 
@@ -310,25 +345,90 @@ Before publishing your blog post:
 
 ## 📋 Quick Templates
 
-### Personal Blog Post
+### Inspirational/Life Lesson Post (Your Style)
 
 ```mdx
 ---
-title: 'My Thoughts on [Topic]'
-date: '2025-01-26'
-tags: ['daily-life', 'reflection', 'personal']
+title: '[Inspirational Title] – [Subtitle about impact]'
+date: '2025-08-30'
+tags: ['cau-chuyen', 'bai-hoc-cuoc-song']
 draft: false
-summary: 'Personal reflections on [topic] and what I learned'
-images: []
+summary: 'Câu chuyện về [topic] và cách nó thay đổi góc nhìn của tôi về [aspect]'
+images: ['/static/images/featured-image.png']
+postType: 0
 ---
 
-Today I want to share my thoughts on...
+> **"[Inspiring Quote]"**  
+> — _[Author]_
 
-## Background
+![Description](/static/images/featured-image.png)
+_Caption describing the image._
 
-## Key Insights
+## 🌱 [Opening section with emoji]
 
-## Conclusion
+[Your opening story/context...]
+
+## 🔍 [Main insight section]
+
+- **"[Key point 1]"** — [Explanation]
+- **"[Key point 2]"** — [Explanation]
+
+[Your personal reflection...]
+
+## 💡 [Personal application section]
+
+Tôi đã từng:
+
+- [Experience 1]
+- [Experience 2]
+- [Experience 3]
+
+Nhưng giờ, tôi nhìn lại và thấy: **[Key insight]**
+
+## 📣 [Closing message section]
+
+Tôi viết để nhắc nhở chính mình, và cũng để gửi đến bạn...
+
+> [Key message for readers]
+
+---
+
+**Cảm ơn bạn đã đọc.**  
+[Personal closing message]  
+**— Phúc**
+```
+
+### Personal Journey Post
+
+```mdx
+---
+title: '[Journey Title] – [What you learned]'
+date: '2025-08-30'
+tags: ['cau-chuyen', 'tu-hoc']
+draft: false
+summary: 'Hành trình [describe journey] và những bài học tôi rút ra được'
+images: []
+postType: 0
+---
+
+Chào bạn, mình là **Phúc** — [brief intro context]
+
+## ✨ [Why section]
+
+- **[Reason 1]**: [Explanation]
+- **[Reason 2]**: [Explanation]
+- **[Reason 3]**: [Explanation]
+
+## 🎯 [Goals/Lessons section]
+
+[Your main content...]
+
+---
+
+[Personal closing message]
+
+Cảm ơn bạn đã đọc đến đây 🙌  
+**— Phúc**
 ```
 
 ### Technical Tutorial
@@ -336,11 +436,12 @@ Today I want to share my thoughts on...
 ```mdx
 ---
 title: 'How to [Do Something] with [Technology]'
-date: '2025-01-26'
-tags: ['tutorial', 'technology-name', 'guide']
+date: '2025-08-30'
+tags: ['story', 'learning-journey']
 draft: false
 summary: 'Step-by-step guide to accomplish [goal] using [technology]'
 layout: PostLayout
+postType: 1
 ---
 
 In this tutorial, we'll learn how to...
@@ -354,26 +455,33 @@ In this tutorial, we'll learn how to...
 ## Conclusion
 ```
 
-### Photo Gallery Post
+### English Personal Story
 
 ```mdx
 ---
-title: 'Photo Gallery: [Event/Location]'
-date: '2025-01-26'
-tags: ['photography', 'travel', 'images']
+title: 'Personal Story Title'
+date: '2025-08-30'
+tags: ['story', 'life-lessons']
 draft: false
-summary: 'A visual journey through [location/event] with stunning photographs'
-layout: PostBanner
-images: ['/static/images/gallery/featured.jpg']
+summary: 'A brief summary of your personal story and its impact'
+images: []
+postType: 1
 ---
 
-A collection of photos from...
+Hello, I'm **Phuc** — [brief intro]
 
-## Gallery
+## The Story
 
-<div className="-mx-2 flex flex-wrap overflow-hidden xl:-mx-2">
-  <!-- Image gallery code -->
-</div>
+[Your story content...]
+
+## What I Learned
+
+[Key insights...]
+
+---
+
+**Thanks for reading!**  
+**— Phuc**
 ```
 
 ## 🔧 File Naming Convention
