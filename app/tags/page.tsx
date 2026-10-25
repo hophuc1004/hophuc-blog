@@ -1,15 +1,20 @@
 import Link from '@/components/Link'
-import Tag from '@/components/Tag'
+import Tag, { getCanonicalCategoryKey, getCategoryDisplayLabel } from '@/components/Tag'
 import { slug } from 'github-slugger'
-import tagData from 'app/tag-data-english.json'
+import tagData from 'app/tag-data.json'
 import { genPageMetadata } from 'app/seo'
 
 export const metadata = genPageMetadata({ title: 'Tags', description: 'Things I blog about' })
 
 export default async function Page() {
-  const tagCounts = tagData as Record<string, number>
-  const tagKeys = Object.keys(tagCounts)
-  const sortedTags = tagKeys.sort((a, b) => tagCounts[b] - tagCounts[a])
+  const rawTagCounts = tagData as Record<string, number>
+  const groupedCounts: Record<string, number> = {}
+  Object.entries(rawTagCounts).forEach(([tag, count]) => {
+    const canonicalKey = getCanonicalCategoryKey(tag)
+    groupedCounts[canonicalKey] = (groupedCounts[canonicalKey] || 0) + count
+  })
+  const tagKeys = Object.keys(groupedCounts)
+  const sortedTags = tagKeys.sort((a, b) => groupedCounts[b] - groupedCounts[a])
   return (
     <>
       <div className="flex flex-col items-start justify-start divide-y divide-gray-200 md:mt-24 md:flex-row md:items-center md:justify-center md:space-x-6 md:divide-y-0 dark:divide-gray-700">
@@ -21,15 +26,16 @@ export default async function Page() {
         <div className="flex max-w-lg flex-wrap">
           {tagKeys.length === 0 && 'No tags found.'}
           {sortedTags.map((t) => {
+            const displayLabel = getCategoryDisplayLabel(t)
             return (
               <div key={t} className="mt-2 mr-5 mb-2">
                 <Tag text={t} />
                 <Link
                   href={`/tags/${slug(t)}`}
-                  className="-ml-2 text-sm font-semibold text-gray-600 uppercase dark:text-gray-300"
-                  aria-label={`View posts tagged ${t}`}
+                  className="-ml-2 text-sm font-semibold text-gray-600 dark:text-gray-300"
+                  aria-label={`View posts in category ${displayLabel}`}
                 >
-                  {` (${tagCounts[t]})`}
+                  {` (${groupedCounts[t]})`}
                 </Link>
               </div>
             )

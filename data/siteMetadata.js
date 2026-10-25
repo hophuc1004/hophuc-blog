@@ -3,7 +3,7 @@ const siteMetadata = {
   title: `Phuc's Blog`,
   author: 'HoPhuc',
   headerTitle: `Phuc's Blog`,
-  description: `Welcome to my personal blog — where I share my journey, this space reflects my growth as a Agricultural Engineering, my experiences in startup, delivery gigs, recruitment, self-taught developer, and now full-stack developer with more than 3 years experiences. I'm writing to learn, to connect, and to grow — one post at a time.`,
+  description: `Welcome to my personal blog, where I document my journey from Agricultural Engineering to software development, share what I learn, and reflect on life along the way.`,
   language: 'en-us',
   theme: 'system', // system, dark or light
   siteUrl: 'https://blog.phuchanhtrinh.work', // Update this with your actual domain
@@ -17,7 +17,7 @@ const siteMetadata = {
   // twitter: 'https://twitter.com/Twitter',
   // facebook: 'https://facebook.com',
   youtube: 'https://www.youtube.com/@phuc.learns',
-  linkedin: 'https://www.linkedin.com/in/ho-phuc-669b97249/',
+  linkedin: 'https://www.linkedin.com/in/hophuc97/',
   // threads: 'https://www.threads.com/@beyondlimits.withphuc',
   // instagram: 'https://www.instagram.com/beyondlimits.withphuc',
   // medium: 'https://medium.com',

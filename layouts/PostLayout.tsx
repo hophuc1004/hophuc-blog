@@ -30,9 +30,7 @@ interface LayoutProps {
 }
 
 export default function PostLayout({ content, authorDetails, next, prev, children }: LayoutProps) {
-  const { filePath, path, slug, date, title, tags } = content
-  console.log('filePath:', filePath)
-  console.log('path:', path)
+  const { filePath, path, slug, date, title, tags, readingTime } = content
   const basePath = path.split('/')[0]
 
   return (
@@ -49,6 +47,9 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                     <time dateTime={date}>
                       {new Date(date).toLocaleDateString(siteMetadata.locale, postDateTemplate)}
                     </time>
+                    {readingTime?.text && (
+                      <span aria-label="Estimated reading time">{` • ${readingTime.text}`}</span>
+                    )}
                   </dd>
                 </div>
               </dl>
@@ -69,7 +70,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                           src={author.avatar}
                           width={38}
                           height={38}
-                          alt="avatar"
+                          alt={author.name}
                           className="h-10 w-10 rounded-full"
                         />
                       )}

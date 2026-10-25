@@ -80,8 +80,12 @@
 
 @layer utilities {
   .prose {
+    line-height: 1.8;
+    overflow-wrap: break-word;
+
     & a {
       color: var(--color-primary-500);
+      overflow-wrap: anywhere;
       &:hover {
         color: var(--color-primary-600);
       }
@@ -93,11 +97,38 @@
       font-weight: 700;
       letter-spacing: var(--tracking-tight);
     }
+    & h2 {
+      margin-top: 2em;
+      margin-bottom: 0.75em;
+      line-height: 1.35;
+    }
     & h3 {
       font-weight: 600;
+      margin-top: 1.6em;
+      margin-bottom: 0.6em;
+      line-height: 1.4;
+    }
+    & :where(p, ul, ol, blockquote) {
+      margin-top: 1.15em;
+      margin-bottom: 1.15em;
+    }
+    & li {
+      margin-top: 0.4em;
+      margin-bottom: 0.4em;
+    }
+    & img {
+      max-width: 100%;
+      height: auto;
+      border-radius: var(--radius-lg);
+    }
+    & pre {
+      max-width: 100%;
+      overflow-x: auto;
+      border-radius: var(--radius-md);
     }
     & :where(code):not(pre code) {
       color: var(--color-indigo-500);
+      word-break: break-word;
     }
   }
 

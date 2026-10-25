@@ -1,496 +1,268 @@
 # Blog Creation Guide
 
-This guide provides step-by-step instructions for creating blog posts in your Tailwind Next.js blog based on the existing content patterns and structure.
+This guide defines the authoring rules, MDX conventions, and publishing workflow for `hophuc-blog` (`https://blog.phuchanhtrinh.work`).
 
-## 📁 File Structure
+---
 
-Blog posts should be placed in the following directory structure:
+## ✍️ 1. Writing Style, Accuracy & Privacy Rules
 
-```
+- **Authentic & Concise Voice**: Keep personal writing authentic, natural, reflective, and concise.
+- **Grammar & Tone**: Correct grammar and awkward phrasing without changing the author's meaning, tone, or personality.
+- **Strict Factual Accuracy**: Never invent personal facts, work experience, projects, achievements, or qualifications.
+- **Privacy Protection**:
+  - Do **not** disclose the author's current country, city, or location unless explicitly requested.
+  - Do **not** mention the author's current employer or current employment arrangement unless explicitly requested.
+  - Do **not** add location or employer details to frontmatter, SEO metadata, or structured data.
+- **Learning Direction Framing**: Describe Dynamics AX, Microsoft Power Platform, Power BI, and business application integrations as technologies currently being explored and learned—not areas of established expertise.
+- **Maintenance Safety**: Preserve existing article URLs (slugs), publication dates, and article prose when performing unrelated maintenance. Do not rewrite or delete existing articles without explicit approval.
+
+---
+
+## 📁 2. File Structure & Naming Conventions
+
+Place blog posts in `data/blog/` using lowercase `kebab-case` filenames with the `.mdx` extension:
+
+```text
 data/
 ├── blog/
-│   ├── your-post-title.mdx                    # Standard blog post
+│   ├── your-post-slug.mdx          # Standard blog post -> /blog/your-post-slug
 │   └── nested-category/
-│       └── your-nested-post.mdx               # Nested/categorized post
+│       └── your-nested-post.mdx    # Nested post -> /blog/nested-category/your-nested-post
 └── authors/
-    ├── default.mdx                            # Default author
-    └── other-authors.mdx                      # Additional authors
+    └── default.mdx                 # Author profile (/my-profile)
 ```
 
-## 📝 Blog Post Template
+- ✅ `my-blog-post.mdx`
+- ❌ `My Blog Post.mdx` or `my_blog_post.mdx`
 
-### Basic Blog Post Template
-
-```mdx
----
-title: 'Your Blog Post Title'
-date: '2025-08-30'
-tags: ['tag1', 'tag2', 'tag3']
-draft: false
-summary: 'A brief summary of your blog post content (recommended 150-200 characters)'
-images: []
-postType: 0
 ---
 
-Your blog content starts here...
+## 🎯 3. Frontmatter Schema & Language Metadata
 
-## Main Section
+Only use frontmatter fields supported by `contentlayer.config.ts`.
 
-Your content with proper markdown formatting.
+### Required Authoring Fields
 
-### Subsection
+- **`title`** (`string`, required by schema): Clear, descriptive post title (recommended under 60 characters for SEO).
+- **`date`** (`string`, `YYYY-MM-DD`, required by schema): Publication date.
+- **`postType`** (`number`, defaults to `0`): Single source of truth for article language:
+  - `0` = **Vietnamese** (`VI · Tiếng Việt`)
+  - `1` = **English** (`EN · English`)
+- **`tags`** (`string[]`, defaults to `[]`): Topic/category tags (kept separate from language identification).
+- **`draft`** (`boolean`): Set to `false` to publish, or `true` to hide in production builds.
+- **`summary`** (`string`): Brief description for article listings, Open Graph, and meta description (recommended 150–200 characters).
 
-More detailed content.
+### Optional Supported Fields
 
-## Conclusion
+- **`images`** (`string[]`): Featured image path(s), e.g., `['/static/images/featured.jpg']`. The first image is used for Open Graph, Twitter cards, and JSON-LD `BlogPosting.image` (falls back to `siteMetadata.socialBanner` when empty `[]`).
+- **`lastmod`** (`string`, `YYYY-MM-DD`): Last modification date.
+- **`authors`** (`string[]`): Author slug references (defaults to `['default']`).
+- **`layout`** (`string`): Layout component (`PostLayout` default, `PostSimple`, or `PostBanner`).
+- **`bibliography`** (`string`): BibTeX file reference for citations.
+- **`canonicalUrl`** (`string`): Explicit canonical URL if cross-posted.
 
-Wrap up your thoughts.
-```
+### Language Metadata Rules
 
-## 🎯 Frontmatter Fields Reference
+- **Single Source of Truth**: Use `postType` (`0` = Vietnamese, `1` = English) to identify the post language. Do not introduce a duplicate language field unless the architecture explicitly requires it.
+- **Content-Based Classification**: Always determine language from the **actual article body content**, never from the title or tags alone (for example, a Vietnamese article that quotes an English phrase in its title or body still uses `postType: 0`).
+- **Ask When Unclear**: If an article's primary language is genuinely ambiguous (e.g., equally mixed bilingual text), ask for confirmation rather than guessing.
 
-### Required Fields
+---
 
-- **title**: String - The title of your blog post
-- **date**: String (YYYY-MM-DD format) - Publication date
-- **tags**: Array of strings - Categorization tags
-- **draft**: Boolean - Set to `false` to publish, `true` to keep as draft
-- **summary**: String - Brief description for SEO and listing pages
+## 🏷️ 4. Tags & Categories
 
-### Optional Fields
+On the `/blog` listing page, **Language** (`EN · English` / `VI · Tiếng Việt`) and **Categories** (`tags`) are displayed and filtered as separate groups. Each article shows a compact language badge alongside its publication date and topic tags below its title.
 
-- **postType**: Number - Language identifier (`0` = Vietnamese, `1` = English)
-- **lastmod**: String (YYYY-MM-DD format) - Last modification date
-- **images**: Array - Featured images (first image used as social banner)
-- **authors**: Array of strings - Author references (defaults to 'default')
-- **layout**: String - Layout component name (see Layout Options)
-- **bibliography**: String - Bibliography file reference for citations
-- **canonicalUrl**: String - Canonical URL if content exists elsewhere
+### Tagging Rules
 
-## 🌐 Language System & Tags
+1. **Separate Language from Topic**: Use `postType` for language identification and `tags` strictly for topic classification.
+2. **Reuse Existing Tags First**: Prefer established tags based on the article's actual topic and language:
+   - **Active Vietnamese Tags (`postType: 0`)**:
+     - `'cau-chuyen'` — Personal stories, career reflections, milestones
+     - `'bai-hoc-cuoc-song'` — Life lessons, mindset, personal growth
+   - **Active English Tags (`postType: 1`)**:
+     - `'story'` — Personal stories, career reflections, milestones
+     - `'life-lessons'` — Life lessons, mindset, personal growth
+3. **Avoid Tag Sprawl**: Do not create near-duplicate tags (e.g., `'stories'` vs `'story'`, or `'bai-hoc'` vs `'bai-hoc-cuoc-song'`).
+4. **Confirm New Categories**: Ask the author before introducing a new tag/category or changing the existing taxonomy when the right classification is unclear.
 
-### Post Language Types
+### How Tag Files Are Generated
 
-Your blog supports bilingual content with automatic tag separation:
+During `yarn build` (via `contentlayer.config.ts`), tags from non-draft posts are written to:
 
-- **Vietnamese Posts**: `postType: 0`
-  - Use Vietnamese tags: `['cau-chuyen', 'bai-hoc-cuoc-song']`
-  - Content written in Vietnamese
-- **English Posts**: `postType: 1`
-  - Use English tags: `['story', 'life-lessons']`
-  - Content written in English
+- `app/tag-data.json` — All tags across both languages (used by `/tags` and static tag route generation)
+- `app/tag-data-english.json` — Tags from English posts (`postType: 1`)
+- `app/tag-data-vietnamese.json` — Tags from Vietnamese posts (`postType: 0`)
 
-### Tag System Architecture
+---
 
-Tags are automatically separated by language:
+## 📸 5. MDX Conventions, Images & Layouts
 
-- Vietnamese tags → `app/tag-data-vietnamese.json`
-- English tags → `app/tag-data-english.json`
-- Combined tags → `app/tag-data.json`
+### Images & Alt Text
 
-**Important**: After creating new posts, run `yarn build` to regenerate tag files.
+- Store static images in `/public/static/images/` and reference them as `/static/images/your-image.jpg`.
+- Always provide **accurate, descriptive `alt` text** that describes what is visually in the image (never copy generic placeholder alt text from another post).
+- When a post includes a hero image in its body, also set `images: ['/static/images/your-image.jpg']` in frontmatter so Open Graph and Twitter previews match the article.
 
-## 🎨 Layout Options
-
-Choose from these available layouts by adding `layout: 'LayoutName'` to frontmatter:
-
-1. **PostLayout** (default) - Standard blog post layout
-2. **PostSimple** - Simplified layout without sidebar
-3. **PostBanner** - Large banner image layout (requires featured image)
-
-Example:
-
-```yaml
-layout: PostBanner
-images: ['/static/images/your-banner.jpg']
-```
-
-## 🏷️ Tagging Strategy
-
-### Current Tag Categories
-
-#### Vietnamese Tags (`postType: 0`)
-
-- `'cau-chuyen'` - Personal stories
-- `'bai-hoc-cuoc-song'` - Life lessons
-- `'cam-hung'` - Inspiration
-- `'phat-trien-ban-than'` - Personal development
-- `'tu-hoc'` - Self-learning
-- `'hanh-trinh-hoc'` - Learning journey
-
-#### English Tags (`postType: 1`)
-
-- `'story'` - Personal stories
-- `'life-lessons'` - Life lessons
-- `'career-change'` - Career transitions
-- `'learning-journey'` - Learning experiences
-- `'personal-growth'` - Personal development
-- `'tech-career'` - Technology career topics
-
-### Content Type Tags (Both Languages)
-
-- `'blogging'`, `'daily-life'`, `'reflection'`, `'writings'`
-
-### Technology Tags (Both Languages)
-
-- `'next-js'`, `'tailwind'`, `'markdown'`, `'github'`, `'ai-tools'`
-
-### Best Practices
-
-- **Match language**: Use Vietnamese tags for Vietnamese posts, English tags for English posts
-- **Be consistent**: Stick to established tag patterns
-- **After changes**: Always run `yarn build` to update tag system
-
-## 📸 Images and Media
-
-### Image Storage
-
-Store images in: `/public/static/images/[category]/filename.jpg`
-
-### Image Usage in Posts
-
-#### Single Image
+**Markdown Image:**
 
 ```markdown
-![Alt text](/static/images/category/image.jpg)
+![Descriptive alt text](/static/images/example.jpg)
+_Optional image caption._
 ```
 
-#### Featured Image (Social Media)
+**HTML Image (when explicit width is desired):**
 
-```yaml
-images: ['/static/images/category/featured-image.jpg']
+```mdx
+<img src="/static/images/example.jpg" alt="Descriptive alt text" width="400" height="auto" />
 ```
 
-#### Image Gallery (using Tailwind classes)
+**Two-Column Image Grid:**
 
 ```jsx
 <div className="-mx-2 flex flex-wrap overflow-hidden xl:-mx-2">
   <div className="my-1 w-full overflow-hidden px-2 xl:my-1 xl:w-1/2 xl:px-2">
-    ![Image 1](/static/images/category/image1.jpg)
+    ![First image description](/static/images/image1.jpg)
   </div>
   <div className="my-1 w-full overflow-hidden px-2 xl:my-1 xl:w-1/2 xl:px-2">
-    ![Image 2](/static/images/category/image2.jpg)
+    ![Second image description](/static/images/image2.jpg)
   </div>
 </div>
 ```
 
-## ⚙️ Advanced Features
+### Heading Hierarchy & Formatting
 
-### Table of Contents
+- The post `title` in frontmatter renders as the page's single `<h1>`.
+- Inside the MDX body, start main sections with `##` (`<h2>`) and subsections with `###` (`<h3>`). Never use `#` (`<h1>`) inside the article body.
+
+### Layout Options
+
+Specify `layout` in frontmatter when a non-default layout is needed:
+
+1. **`PostLayout`** (default) — Standard layout with author details, reading time, tags, and previous/next navigation.
+2. **`PostSimple`** — Simplified single-column layout without sidebar.
+3. **`PostBanner`** — Full-bleed banner layout (requires `images: ['/static/images/banner.jpg']`).
+
+### Code Blocks, Math, TOC & Citations
+
+**Code Block with Title, Line Numbers & Highlighting:**
+
+````markdown
+```js:example.js {1,3-4} showLineNumbers
+const message = 'Hello World'
+console.log(message)
+```
+````
+
+**Inline Table of Contents:**
 
 ```jsx
 <TOCInline toc={props.toc} exclude="Introduction" toHeading={2} />
 ```
 
-Options:
+**Math (KaTeX):**
+Use `$E = mc^2$` for inline math and `$$ ... $$` for block math.
 
-- `exclude`: String or array - Headings to exclude
-- `toHeading`: Number - Maximum heading level to include
-- `fromHeading`: Number - Minimum heading level to include
-- `asDisclosure`: Boolean - Render as expandable element
+**Footnotes & Citations:**
+Use standard GFM footnotes (`[^1]`) or add `bibliography: references-data.bib` to frontmatter and cite with `[@CitationKey]`.
 
-### Code Blocks with Features
+---
 
-#### Basic Code Block
+## 📋 6. Post Templates
 
-````markdown
-```javascript
-const example = 'Hello World'
-console.log(example)
-```
-````
-
-#### With Line Numbers and Highlighting
-
-````markdown
-```js {1,3-4} showLineNumbers
-var num1, num2, sum
-num1 = prompt('Enter first number')
-num2 = prompt('Enter second number')
-sum = parseInt(num1) + parseInt(num2)
-```
-````
-
-#### With Filename
-
-````markdown
-```js:filename.js
-// Your code here
-```
-````
-
-### Math Equations (KaTeX)
-
-#### Inline Math
-
-```markdown
-This is inline math: $E = mc^2$
-```
-
-#### Block Math
-
-```markdown
-$$
-\mathbf{Y} = \left[\begin{array}
-  {c}
-  y_1 \\
-  y_2 \\
-  \vdots \\
-  y_n
-\end{array}\right]
-$$
-```
-
-### Citations and Bibliography
-
-Add to frontmatter:
-
-```yaml
-bibliography: references-data.bib
-```
-
-In content:
-
-```markdown
-Standard citation [@Nash1950]
-In-text citations e.g. @Nash1951
-Multiple citations [see @Nash1950; @Nash1951, page 50]
-```
-
-### Newsletter Component
-
-```jsx
-<BlogNewsletterForm title="Subscribe to my newsletter" />
-```
-
-### Footnotes
-
-```markdown
-This is a statement with a footnote[^1].
-
-[^1]: This is the footnote content.
-```
-
-## 🗂️ Nested Posts (Categories)
-
-For categorized content, create subdirectories:
-
-```
-data/blog/
-├── tutorials/
-│   └── advanced-nextjs.mdx
-├── reviews/
-│   └── book-review.mdx
-└── personal/
-    └── daily-thoughts.mdx
-```
-
-## 👥 Multiple Authors
-
-### Create Author File
-
-In `data/authors/author-name.mdx`:
+### Vietnamese Personal / Reflection Post (`postType: 0`)
 
 ```mdx
 ---
-name: Author Name
-avatar: /static/images/authors/author.jpg
-occupation: Your Occupation
-company: Your Company
-email: author@email.com
-twitter: https://twitter.com/username
-linkedin: https://linkedin.com/in/username
-github: https://github.com/username
----
-
-Author bio and description...
-```
-
-### Reference in Blog Post
-
-```yaml
-authors: ['default', 'author-name']
-```
-
-## 🚀 Publishing Checklist
-
-Before publishing your blog post:
-
-### Content Review
-
-- [ ] Title is clear and descriptive
-- [ ] Summary is compelling and SEO-friendly
-- [ ] Tags are relevant and consistent with existing taxonomy
-- [ ] Images are optimized and properly referenced
-- [ ] All links work correctly
-- [ ] Code blocks are properly formatted
-
-### Technical Check
-
-- [ ] Date is in correct format (YYYY-MM-DD)
-- [ ] `draft: false` to publish
-- [ ] File is saved as `.mdx` extension
-- [ ] File location is correct (`data/blog/` or subdirectory)
-- [ ] No syntax errors in frontmatter
-- [ ] **postType matches content language** (`0` = Vietnamese, `1` = English)
-- [ ] **Tags match post language** (Vietnamese tags for Vietnamese posts, English for English)
-- [ ] Run `yarn build` after creating new posts to update tag system
-
-### SEO & Social
-
-- [ ] Featured image added if using PostBanner layout
-- [ ] Summary is between 150-200 characters
-- [ ] Title is under 60 characters for SEO
-- [ ] Tags help with discoverability
-
-## 📋 Quick Templates
-
-### Inspirational/Life Lesson Post (Your Style)
-
-```mdx
----
-title: '[Inspirational Title] – [Subtitle about impact]'
-date: '2025-08-30'
-tags: ['cau-chuyen', 'bai-hoc-cuoc-song']
+title: '07 - [Tiêu đề bài viết]'
+date: '2026-04-20'
+tags: ['cau-chuyen']
 draft: false
-summary: 'Câu chuyện về [topic] và cách nó thay đổi góc nhìn của tôi về [aspect]'
-images: ['/static/images/featured-image.png']
+summary: 'Tóm tắt ngắn gọn nội dung chính của bài viết (khoảng 150-200 ký tự).'
+images: ['/static/images/your-image.jpg']
 postType: 0
 ---
 
-> **"[Inspiring Quote]"**  
-> — _[Author]_
+<img
+  src="/static/images/your-image.jpg"
+  alt="[Mô tả chính xác hình ảnh]"
+  width="400"
+  height="auto"
+/>
+_[Chú thích ngắn dưới ảnh nếu có.]_
 
-![Description](/static/images/featured-image.png)
-_Caption describing the image._
-
-## 🌱 [Opening section with emoji]
-
-[Your opening story/context...]
-
-## 🔍 [Main insight section]
-
-- **"[Key point 1]"** — [Explanation]
-- **"[Key point 2]"** — [Explanation]
-
-[Your personal reflection...]
-
-## 💡 [Personal application section]
-
-Tôi đã từng:
-
-- [Experience 1]
-- [Experience 2]
-- [Experience 3]
-
-Nhưng giờ, tôi nhìn lại và thấy: **[Key insight]**
-
-## 📣 [Closing message section]
-
-Tôi viết để nhắc nhở chính mình, và cũng để gửi đến bạn...
-
-> [Key message for readers]
+[Mở đầu câu chuyện tự nhiên, chân thật...]
 
 ---
 
-**Cảm ơn bạn đã đọc.**  
-[Personal closing message]  
+## 🌱 [Tiêu đề phần chính 1]
+
+[Nội dung chia sẻ và góc nhìn cá nhân...]
+
+## 💡 [Tiêu đề phần chính 2]
+
+- **[Ý chính 1]**: [Giải thích ngắn gọn]
+- **[Ý chính 2]**: [Giải thích ngắn gọn]
+
+---
+
+Cảm ơn bạn đã đọc.  
 **— Phúc**
 ```
 
-### Personal Journey Post
+### English Personal / Technical Post (`postType: 1`)
 
 ```mdx
 ---
-title: '[Journey Title] – [What you learned]'
-date: '2025-08-30'
-tags: ['cau-chuyen', 'tu-hoc']
+title: '03 - [Your Post Title]'
+date: '2026-04-20'
+tags: ['story']
 draft: false
-summary: 'Hành trình [describe journey] và những bài học tôi rút ra được'
-images: []
-postType: 0
----
-
-Chào bạn, mình là **Phúc** — [brief intro context]
-
-## ✨ [Why section]
-
-- **[Reason 1]**: [Explanation]
-- **[Reason 2]**: [Explanation]
-- **[Reason 3]**: [Explanation]
-
-## 🎯 [Goals/Lessons section]
-
-[Your main content...]
-
----
-
-[Personal closing message]
-
-Cảm ơn bạn đã đọc đến đây 🙌  
-**— Phúc**
-```
-
-### Technical Tutorial
-
-```mdx
----
-title: 'How to [Do Something] with [Technology]'
-date: '2025-08-30'
-tags: ['story', 'learning-journey']
-draft: false
-summary: 'Step-by-step guide to accomplish [goal] using [technology]'
-layout: PostLayout
+summary: 'A concise summary of the article for listings and SEO (recommended 150-200 characters).'
+images: ['/static/images/your-image.jpg']
 postType: 1
 ---
 
-In this tutorial, we'll learn how to...
+![Accurate description of the image](/static/images/your-image.jpg)
+_Optional caption._
 
-## Prerequisites
+[Opening context in a clear, personal voice...]
 
-## Step 1: Setup
+## ✨ [Main Section]
 
-## Step 2: Implementation
+[Main story, technical notes, or reflection...]
 
-## Conclusion
-```
+## 🎯 [Key Takeaways]
 
-### English Personal Story
-
-```mdx
----
-title: 'Personal Story Title'
-date: '2025-08-30'
-tags: ['story', 'life-lessons']
-draft: false
-summary: 'A brief summary of your personal story and its impact'
-images: []
-postType: 1
----
-
-Hello, I'm **Phuc** — [brief intro]
-
-## The Story
-
-[Your story content...]
-
-## What I Learned
-
-[Key insights...]
+- **[Takeaway 1]**: [Explanation]
+- **[Takeaway 2]**: [Explanation]
 
 ---
 
-**Thanks for reading!**  
+**Thank you for reading!**  
 **— Phuc**
 ```
 
-## 🔧 File Naming Convention
+---
 
-Use kebab-case for file names:
+## 🚀 7. Publishing & Verification Checklist
 
-- ✅ `my-blog-post.mdx`
-- ✅ `advanced-react-patterns.mdx`
-- ❌ `My Blog Post.mdx`
-- ❌ `advanced_react_patterns.mdx`
+Before finalizing any new or updated blog post:
 
-This guide should help you create consistent, well-formatted blog posts that integrate seamlessly with your existing blog structure and features.
+1. **Frontmatter & MDX Syntax**:
+   - [ ] Only supported frontmatter fields are used and YAML syntax is valid.
+   - [ ] `date` (and `lastmod` if present) uses `YYYY-MM-DD` format.
+   - [ ] `draft: false` is set when ready to publish.
+   - [ ] Body headings start at `##` (`<h2>`) with no `#` (`<h1>`) in the MDX body.
+2. **Language & Tag Consistency**:
+   - [ ] `postType` matches the actual body language (`0` = Vietnamese, `1` = English).
+   - [ ] `tags` reuse established topic tags matching the post's content and language.
+3. **Images, Links & Privacy**:
+   - [ ] Image files exist in `public/static/images/` and are referenced as `/static/images/...`.
+   - [ ] `images` frontmatter includes the hero image when a social preview image is intended.
+   - [ ] Every image has accurate, descriptive `alt` text.
+   - [ ] Internal and external links are valid.
+   - [ ] No private location or current employer details are disclosed.
+4. **Build & Lint Verification**:
+   - [ ] Run `yarn lint` to verify code/lint rules.
+   - [ ] Run `yarn build` (`EXPORT=true next build`) to regenerate Contentlayer documents, tag JSON files (`app/tag-data*.json`), search index (`public/search.json`), and static pages.

@@ -80,15 +80,16 @@ async function createTagCount(allBlogs) {
           allTagCount[formattedTag] = 1
         }
 
-        // Count separately by language based on postType
-        if (file.postType === 1) {
+        // Count separately by language based on language or postType
+        const lang = file.language || (file.postType === 1 ? 'en' : 'vi')
+        if (lang === 'en') {
           // English
           if (formattedTag in englishTagCount) {
             englishTagCount[formattedTag] += 1
           } else {
             englishTagCount[formattedTag] = 1
           }
-        } else if (file.postType === 0) {
+        } else if (lang === 'vi') {
           // Vietnamese
           if (formattedTag in vietnameseTagCount) {
             vietnameseTagCount[formattedTag] += 1
@@ -145,10 +146,15 @@ export const Blog = defineDocumentType(() => ({
     layout: { type: 'string' },
     bibliography: { type: 'string' },
     canonicalUrl: { type: 'string' },
-    postType: { type: 'number', default: 0 }, // 0 = English, 1 = Vietnamese
+    language: { type: 'enum', options: ['en', 'vi'] },
+    postType: { type: 'number', default: 0 }, // 0 = Vietnamese, 1 = English
   },
   computedFields: {
     ...computedFields,
+    language: {
+      type: 'string',
+      resolve: (doc) => doc.language || (doc.postType === 1 ? 'en' : 'vi'),
+    },
     structuredData: {
       type: 'json',
       resolve: (doc) => ({
@@ -158,7 +164,8 @@ export const Blog = defineDocumentType(() => ({
         datePublished: doc.date || '2024-01-01',
         dateModified: doc.lastmod || doc.date || '2024-01-01',
         description: doc.summary,
-        image: doc.images ? doc.images[0] : siteMetadata.socialBanner,
+        inLanguage: doc.language || (doc.postType === 1 ? 'en' : 'vi'),
+        image: doc.images && doc.images.length > 0 ? doc.images[0] : siteMetadata.socialBanner,
         url: `${siteMetadata.siteUrl}/${doc._raw.flattenedPath}`,
       }),
     },
